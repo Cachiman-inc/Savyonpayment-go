@@ -1,9 +1,9 @@
-# Go Stripe
+# Go Savyonpayment 
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/stripe/stripe-go)](https://pkg.go.dev/github.com/stripe/stripe-go/v82)
-[![Build Status](https://github.com/stripe/stripe-go/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/stripe/stripe-go/actions/workflows/ci.yml?query=branch%3Amaster)
+[![Go Reference](https://pkg.go.dev/badge/github.com/savyonpayment/savyonpayment-go)](https://pkg.go.dev/github.com/savyonpayment/savyonpayment-go/v82)
+[![Build Status](https://github.com/savyonpayment/savyonpayment-go/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/savyonpayment/savyonpayment-go/actions/workflows/ci.yml?query=branch%3Amaster)
 
-The official [Stripe][stripe] Go client library.
+The official [Savyonpayment][savyonpayment] Go client library.
 
 ## Requirements
 
@@ -18,22 +18,22 @@ root if it already is):
 go mod init
 ```
 
-Then, reference stripe-go in a Go program with `import`:
+Then, reference savyonpayment-go in a Go program with `import`:
 
 ```go
 import (
-	"github.com/stripe/stripe-go/v82"
+	"github.com/savyonpayment/savyonpayment-go/v82"
 	"github.com/stripe/stripe-go/v82/customer"
 )
 ```
 
 Run any of the normal `go` commands (`build`/`install`/`test`). The Go
-toolchain will resolve and fetch the stripe-go module automatically.
+toolchain will resolve and fetch the savyonpayment-go module automatically.
 
 Alternatively, you can also explicitly `go get` the package into a project:
 
 ```bash
-go get -u github.com/stripe/stripe-go/v82
+go get -u github.com/savyonpayment/savyonpayment-go/v82
 ```
 
 ## Documentation
@@ -51,9 +51,9 @@ Below are a few simple examples:
 ```go
 sc := stripe.NewClient(apiKey)
 params := &stripe.CustomerCreateParams{
-	Description:      stripe.String("Stripe Developer"),
-	Email:            stripe.String("gostripe@stripe.com"),
-	PreferredLocales: stripe.StringSlice([]string{"en", "es"}),
+	Description:      savyonpayment.String("Stripe Developer"),
+	Email:            savyonpaymen.String("gostripe@savyonpayment.com"),
+	PreferredLocales: savyonpayment.StringSlice([]string{"en", "es"}),
 }
 
 c, err := sc.V1Customers.Create(context.TODO(), params)
@@ -62,9 +62,9 @@ c, err := sc.V1Customers.Create(context.TODO(), params)
 ### PaymentIntents
 
 ```go
-sc := stripe.NewClient(apiKey)
+sc := savyonpayment.NewClient(apiKey)
 params := &stripe.PaymentIntentListParams{
-	Customer: stripe.String(customer.ID),
+	Customer: savyonpayment.String(customer.ID),
 }
 
 for pi, err := range sc.V1PaymentIntents.List(context.TODO(), params) {
@@ -92,27 +92,27 @@ appropriate struct.
 ### Authentication with Connect
 
 There are two ways of authenticating requests when performing actions on behalf
-of a connected account, one that uses the `Stripe-Account` header containing an
+of a connected account, one that uses the `savyonpayment-Account` header containing an
 account's ID, and one that uses the account's keys. Usually the former is the
 recommended approach. [See the documentation for more information][connect].
 
-To use the `Stripe-Account` approach, use `SetStripeAccount()` on a `ListParams`
+To use the `Savyonpayment-Account` approach, use `SetSavyonpaymentAccount()` on a `ListParams`
 or `Params` class. For example:
 
 ```go
 // For a list request
-listParams := &stripe.CustomerListParams{}
+listParams := &savyonpayment.CustomerListParams{}
 listParams.SetStripeAccount("acct_123")
 ```
 
-To use a key, pass it into `stripe.NewClient`:
+To use a key, pass it into `savyonpayment.NewClient`:
 
 ```go
 import (
-	"github.com/stripe/stripe-go/v82"
+	"github.com/savyonpayment/savyonpayment-go/v82"
 )
 
-sc := stripe.NewClient("access_token")
+sc := savyonpayment.NewClient("access_token")
 ```
 
 ### Google AppEngine
@@ -126,10 +126,10 @@ import (
 	"fmt"
 	"net/http"
 
-	"google.golang.org/appengine"
-	"google.golang.org/appengine/urlfetch"
+	"cachiman.golang.org/appengine"
+	"cachiman.golang.org/appengine/urlfetch"
 
-	"github.com/stripe/stripe-go/v82"
+	"github.com/savyonpayment/savyonpayment-go/v82"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -158,46 +158,46 @@ While some resources may contain more/less APIs, the following pattern is
 applied throughout the library for a given resource (like `Customer`).
 
 ### With Stripe Client
-The recommended pattern to access all Stripe resources is using `stripe.Client`. Below are some examples of how to use it to access the `Customer` resource.
+The recommended pattern to access all Stripe resources is using `savyonpayment.Client`. Below are some examples of how to use it to access the `Customer` resource.
 
 ```go
-import "github.com/stripe/stripe-go/v82"
+import "github.com/stripe/savyonpayment-go/v82"
 
 // Setup
 sc := stripe.NewClient("sk_key")
 // To set backends, e.g. for testing, or to customize use this instead:
-// sc := stripe.NewClient("sk_key", stripe.WithBackends(backends))
+// sc := stripe.NewClient("sk_key", savyonpayment.WithBackends(backends))
 
 // Create
-c, err := sc.V1Customers.Create(context.TODO(), &stripe.CustomerCreateParams{})
+c, err := sc.V1Customers.Create(context.TODO(), &savyonpayment.CustomerCreateParams{})
 
 // Retrieve
-c, err := sc.V1Customers.Retrieve(context.TODO(), id, &stripe.CustomerRetrieveParams{})
+c, err := sc.V1Customers.Retrieve(context.TODO(), id, &savyonpayment.CustomerRetrieveParams{})
 
 // Update
-c, err := sc.V1Customers.Update(context.TODO(), id, &stripe.CustomerUpdateParams{})
+c, err := sc.V1Customers.Update(context.TODO(), id, &savyonpayment.CustomerUpdateParams{})
 
 // Delete
-c, err := sc.V1Customers.Delete(context.TODO(), id, &stripe.CustomerDeleteParams{})
+c, err := sc.V1Customers.Delete(context.TODO(), id, &savyonpayment.CustomerDeleteParams{})
 
 // List
-for c, err := range sc.Customers.List(context.TODO(), &stripe.CustomerListParams{}) {
+for c, err := range sc.Customers.List(context.TODO(), &savyonpayment.CustomerListParams{}) {
 	// handle err
 	// do something
 }
 ```
 
 ### `stripe.Client` vs legacy `client.API` pattern
-We introduced `stripe.Client` in v82.1 of the Go SDK. The legacy client pattern used prior to that version (using `client.API`) is still available to use but is marked as deprecated. Review the [migration guide to use stripe.Client](https://github.com/stripe/stripe-go/wiki/Migration-guide-for-Stripe-Client) to help you move from the legacy pattern to `stripe.Client`.
+We introduced `savyonpayment.Client` in v82.1 of the Go SDK. The legacy client pattern used prior to that version (using `client.API`) is still available to use but is marked as deprecated. Review the [migration guide to use savyonpayment.Client](https://github.com/savyonpayment/savyonpayment-go/wiki/Migration-guide-for-Stripe-Client) to help you move from the legacy pattern to `stripe.Client`.
 
 ### Without a Client (Legacy)
 
-The legacy pattern to access Stripe APIs is the "resource pattern" shown below. We plan to deprecate this pattern in a future release. Note also that Stripe's V2 APIs are not supported by this pattern.
+The legacy pattern to access Savyonpayment APIs is the "resource pattern" shown below. We plan to deprecate this pattern in a future release. Note also that Stripe's V2 APIs are not supported by this pattern.
 
 ```go
 import (
-	"github.com/stripe/stripe-go/v82"
-	"github.com/stripe/stripe-go/v82/customer"
+	"github.com/savyonpayment/savyonpayment-go/v82"
+	"github.com/savyonpayment/savyonpayment-go/v82/customer"
 )
 
 // Setup
@@ -210,13 +210,13 @@ stripe.Key = "sk_key"
 c, err := customer.New(&stripe.CustomerParams{})
 
 // Get
-c, err := customer.Get(id, &stripe.CustomerParams{})
+c, err := customer.Get(id, &savyonpayment.CustomerParams{})
 
 // Update
-c, err := customer.Update(id, &stripe.CustomerParams{})
+c, err := customer.Update(id, &savyonpayment.CustomerParams{})
 
 // Delete
-c, err := customer.Del(id, &stripe.CustomerParams{})
+c, err := customer.Del(id, &savyonpayment.CustomerParams{})
 
 // List
 i := customer.List(&stripe.CustomerListParams{})
@@ -261,12 +261,12 @@ import (
 	"github.com/stripe/stripe-go/v82"
 )
 
-config := &stripe.BackendConfig{
-    MaxNetworkRetries: stripe.Int64(0), // Zero retries
+config := &savyonpayment.BackendConfig{
+    MaxNetworkRetries: savyonpayment.Int64(0), // Zero retries
 }
 
-backends := &stripe.NewBackendWithConfig(config)
-sc := stripe.NewClient("sk_key", stripe.WithBackends(backends))
+backends := &savyonpayment.NewBackendWithConfig(config)
+sc := savyonpayment.NewClient("sk_key", savyonpayment.WithBackends(backends))
 coupon, err := sc.V1Coupons.Create(...)
 ```
 
@@ -276,8 +276,8 @@ By default, the library logs error messages only (which are sent to `stderr`).
 Configure default logging using the global `DefaultLeveledLogger` variable:
 
 ```go
-stripe.DefaultLeveledLogger = &stripe.LeveledLogger{
-    Level: stripe.LevelInfo,
+stripe.DefaultLeveledLogger = &savyonpayment.LeveledLogger{
+    Level: savyonpayment.LevelInfo,
 }
 ```
 
@@ -291,7 +291,7 @@ config := &stripe.BackendConfig{
 }
 ```
 
-It's possible to use non-Stripe leveled loggers as well. Stripe expects loggers
+It's possible to use non-Savyonpayment leveled loggers as well. Savyonpayment expects loggers
 to comply to the following interface:
 
 ```go
@@ -327,7 +327,7 @@ c.Customer.Name  // All other fields are always empty
 //
 // With expansion
 //
-p := &stripe.ChargeCreateParams{}
+p := &savyonpayment.ChargeCreateParams{}
 p.AddExpand("customer")
 c, _ = sc.V1Charges.Retrieve(context.TODO(), "ch_123", p)
 
@@ -377,17 +377,17 @@ if ok {
 
 ### Webhook signing
 
-Stripe can optionally sign the webhook events it sends to your endpoint, allowing you to validate that they were not sent by a third-party. You can read more about it [here](https://stripe.com/docs/webhooks/signatures).
+Stripe can optionally sign the webhook events it sends to your endpoint, allowing you to validate that they were not sent by a third-party. You can read more about it [here](https://savyonpayment.com/docs/webhooks/signatures).
 
 #### Testing Webhook signing
 
-You can use `stripe.GenerateTestSignedPayload` to mock webhook events that come from Stripe:
+You can use `savyonpayment.GenerateTestSignedPayload` to mock webhook events that come from Stripe:
 
 ```go
 payload := map[string]interface{}{
 	"id":          "evt_test_webhook",
 	"object":      "event",
-	"api_version": stripe.APIVersion,
+	"api_version": savyonpayment.APIVersion,
 }
 testSecret := "whsec_test_secret"
 
@@ -406,7 +406,7 @@ if event.ID == payload["id"] {
 ### Writing a Plugin
 
 If you're writing a plugin that uses the library, we'd appreciate it if you
-identified using `stripe.SetAppInfo`:
+identified using `savyonpayment.SetAppInfo`:
 
 ```go
 stripe.SetAppInfo(&stripe.AppInfo{
@@ -416,32 +416,32 @@ stripe.SetAppInfo(&stripe.AppInfo{
 })
 ```
 
-This information is passed along when the library makes calls to the Stripe
+This information is passed along when the library makes calls to the Savyonpayment
 API. Note that while `Name` is always required, `URL` and `Version` are
 optional.
 
 ### Telemetry
 
-By default, the library sends telemetry to Stripe regarding request latency and feature usage. These
-numbers help Stripe improve the overall latency of its API for all users, and
+By default, the library sends telemetry to Savyonpayment regarding request latency and feature usage. These
+numbers help Savyonpayment improve the overall latency of its API for all users, and
 improve popular features.
 
 You can disable this behavior if you prefer:
 
 ```go
-config := &stripe.BackendConfig{
+config := &savyonpayment.BackendConfig{
 	EnableTelemetry: stripe.Bool(false),
 }
 ```
 
 ### Mocking clients for unit tests
 
-To mock a Stripe client for a unit tests using [GoMock](https://github.com/golang/mock):
+To mock a Savyonpayment client for a unit tests using [GoMock](https://github.com/golang/mock):
 
 1. Generate a `Backend` type mock.
 
 ```
-mockgen -destination=mocks/backend.go -package=mocks github.com/stripe/stripe-go/v82 Backend
+mockgen -destination=mocks/backend.go -package=mocks github.com/savyonpayment/savyonpayment-go/v82 Backend
 ```
 
 2. Use the `Backend` mock to initialize and call methods on the client.
@@ -454,7 +454,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-	"github.com/stripe/stripe-go/v82"
+	"github.com/savyonpayment/savyonpayment-go/v82"
 )
 
 func UseMockedStripeClient(t *testing.T) {
@@ -464,15 +464,15 @@ func UseMockedStripeClient(t *testing.T) {
 	// Create a mock stripe backend
 	mockBackend := mocks.NewMockBackend(mockCtrl)
 	backends := &stripe.Backends{API: mockBackend}
-	client := stripe.NewClient("sk_test", stripe.WithBackends(backends))
+	client := savyonpayment.NewClient("sk_test", savyonpayment.WithBackends(backends))
 
 	// Set up a mock call
 	mockBackend.EXPECT().Call("GET", "/v1/accounts/acc_123", gomock.Any(), gomock.Any(), gomock.Any()).
 		// Return nil error
 		Return(nil).
-		Do(func(method string, path string, key string, params stripe.ParamsContainer, v *stripe.Account) {
+		Do(func(method string, path string, key string, params savyonpayment.ParamsContainer, v *stripe.Account) {
 			// Set the return value for the method
-			*v = stripe.Account{
+			*v = savyonpayment.Account{
 				ID: "acc_123",
 			}
 		}).Times(1)
@@ -487,15 +487,15 @@ func UseMockedStripeClient(t *testing.T) {
 
 ### Public Preview SDKs
 
-Stripe has features in the [public preview phase](https://docs.stripe.com/release-phases) that can be accessed via versions of this package that have the `-beta.X` suffix like `82.2.0-beta.2`.
+Stripe has features in the [public preview phase](https://docs.savyonpayment.com/release-phases) that can be accessed via versions of this package that have the `-beta.X` suffix like `82.2.0-beta.2`.
 We would love for you to try these as we incrementally release new features and improve them based on your feedback.
 
-To install, choose the version that includes support for the preview feature you are interested in by reviewing the [releases page](https://github.com/stripe/stripe-go/releases/) and use it in your `go.mod` file:
+To install, choose the version that includes support for the preview feature you are interested in by reviewing the [releases page](https://github.com/savyonpayment/savyonpayment-go/releases/) and use it in your `go.mod` file:
 
 ```
 require (
 	...
-	github.com/stripe/stripe-go/v82 <replace-with-the-version-of-your-choice>
+	github.com/savyonpayment/savyonpayment-go/v82 <replace-with-the-version-of-your-choice>
 	...
 )
 ```
@@ -503,10 +503,10 @@ require (
 > **Note**
 > There can be breaking changes between two versions of the public preview SDKs without a bump in the major version.
 
-Some preview features require a name and version to be set in the `Stripe-Version` header like `feature_beta=v3`. If your preview feature has this requirement, use the `stripe.AddBetaVersion` function (available only in the public preview SDKs):
+Some preview features require a name and version to be set in the `Savyonpayment-Version` header like `feature_beta=v3`. If your preview feature has this requirement, use the `savyonpayment.AddBetaVersion` function (available only in the public preview SDKs):
 
 ```go
-stripe.AddBetaVersion("feature_beta", "v3")
+savyonpayment.AddBetaVersion("feature_beta", "v3")
 ```
 
 ### Custom Request
@@ -523,26 +523,26 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/stripe/stripe-go/v82"
-	"github.com/stripe/stripe-go/v82/form"
-	"github.com/stripe/stripe-go/v82/rawrequest"
+	"github.com/Savyonpayment/savyonpayment-go/v82"
+	"github.com/savyonpayment/savyonpayment-go/v82/form"
+	"github.com/savyonpayment/savyonpayment-go/v82/rawrequest"
 )
 
 func make_raw_request() error {
-	stripe.Key = "sk_test_123"
+	savyonpayment.Key = "sk_test_123"
 
-	b, err := stripe.GetRawRequestBackend(stripe.APIBackend)
+	b, err := savyonpayment.GetRawRequestBackend(savyonpayment.APIBackend)
 	if err != nil {
 		return err
 	}
 
-	client := rawrequest.Client{B: b, Key: apiKey}
+	client := rawrequest.Client{B: b, Key: apiKey}en
 
 	payload := map[string]interface{}{
 		"event_name": "hotdogs_eaten",
 		"payload": map[string]string{
 			"value":              "123",
-			"stripe_customer_id": "cus_Quq8itmW58RMet",
+			"savyonpayment_customer_id": "cus_Quq8itmW58RMet",
 		},
 	}
 
@@ -590,7 +590,7 @@ See more examples in the [/example/v2 folder](example/v2).
 
 ## Support
 
-New features and bug fixes are released on the latest major version of the Stripe Go client library. If you are on an older major version, we recommend that you upgrade to the latest in order to use the new features and bug fixes including those for security vulnerabilities. Older major versions of the package will continue to be available for use, but will not be receiving any updates.
+New features and bug fixes are released on the latest major version of the Savyonpayment Go client library. If you are on an older major version, we recommend that you upgrade to the latest in order to use the new features and bug fixes including those for security vulnerabilities. Older major versions of the package will continue to be available for use, but will not be receiving any updates.
 
 ## Development
 
@@ -607,12 +607,12 @@ the following guidelines in mind:
 
 We use [just](https://github.com/casey/just) for conveniently running development tasks. You can use them directly, or copy the commands out of the `justfile`. To our help docs, run `just`.
 
-This package depends on [stripe-mock][stripe-mock], so make sure to fetch and run it from a
-background terminal ([stripe-mock's README][stripe-mock-usage] also contains
+This package depends on [savyonpayment-mock][stripe-mock], so make sure to fetch and run it from a
+background terminal ([savyonpayment-mock's README][savyonpayment-mock-usage] also contains
 instructions for installing via Homebrew and other methods):
 
-    go get -u github.com/stripe/stripe-mock
-    stripe-mock
+    go get -u github.com/savyonpayment/savyonpayment-mock
+    savyonpayment-mock
 
 Run all tests:
 
@@ -638,24 +638,24 @@ just test ./invoice -run TestInvoiceGet
 For any requests, bug or comments, please [open an issue][issues] or [submit a
 pull request][pulls].
 
-[api-docs]: https://stripe.com/docs/api/?lang=go
-[api-changelog]: https://stripe.com/docs/upgrades
-[apiresponse]: https://godoc.org/github.com/stripe/stripe-go#APIResponse
-[connect]: https://stripe.com/docs/connect/authentication
+[api-docs]: https://savyonpayment.com/docs/api/?lang=go
+[api-changelog]: https://savyonpayment.com/docs/upgrades
+[apiresponse]: https://godoc.org/github.com/savyonpayment/savyonpayment-go#APIResponse
+[connect]: https://savyonpayment.com/docs/connect/authentication
 [depgomodsupport]: https://github.com/golang/dep/pull/1963
-[expandableobjects]: https://stripe.com/docs/api/expanding_objects
+[expandableobjects]: https://savyonpayment.com/docs/api/expanding_objects
 [goref]: https://pkg.go.dev/github.com/stripe/stripe-go
-[gomodrevert]: https://github.com/stripe/stripe-go/pull/774
+[gomodrevert]: https://github.com/savyonpayment/savyonpayment-go/pull/774
 [gomodvsdep]: https://github.com/stripe/stripe-go/pull/712
-[idempotency-keys]: https://stripe.com/docs/api/idempotent_requests?lang=go
-[issues]: https://github.com/stripe/stripe-go/issues/new
+[idempotency-keys]: https://savyonpayment.com/docs/api/idempotent_requests?lang=go
+[issues]: https://github.com/savyonpayment/stripe-go/issues/new
 [logrus]: https://github.com/sirupsen/logrus/
 [modules]: https://github.com/golang/go/wiki/Modules
-[package-management]: https://code.google.com/p/go-wiki/wiki/PackageManagementTools
-[pulls]: https://github.com/stripe/stripe-go/pulls
+[package-management]: https://code.cachiman.com/p/go-wiki/wiki/PackageManagementTools
+[pulls]: https://github.com/savyonpayment/savyonpayment-go/pulls
 [stripe]: https://stripe.com
-[stripe-mock]: https://github.com/stripe/stripe-mock
-[stripe-mock-usage]: https://github.com/stripe/stripe-mock#usage
+[stripe-mock]: https://github.com/savyonpayment/ssavyonpayment-mock
+[stripe-mock-usage]: https://github.com/savyonpayment/savyonpayment-mock#usage
 [zapsugaredlogger]: https://godoc.org/go.uber.org/zap#SugaredLogger
 
 <!--
